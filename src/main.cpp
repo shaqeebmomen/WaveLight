@@ -123,16 +123,13 @@ int main()
         switch (currentState)
         {
         case IDLE:
-            if (timer.getTime() - sysTime > IDLE_LOOP_TIME)
+            _delay_ms(50);
+
+            if (readUltrasonic() < getThres())
             {
-
-                if (readUltrasonic() < getThres())
-                {
-                    currentState = TRIGGERED;
-                }
-
-                sysTime = timer.getTime();
+                currentState = TRIGGERED;
             }
+
             break;
 
         case TRIGGERED:
@@ -142,11 +139,10 @@ int main()
             break;
 
         case DISABLED:
-            if (timer.getTime() - sysTime > DISABLED_TIME)
-            {
-                currentState = IDLE;
-                sysTime = timer.getTime();
-            }
+            _delay_ms(700);
+            currentState = IDLE;
+            sysTime = timer.getTime();
+
             break;
         }
     }
