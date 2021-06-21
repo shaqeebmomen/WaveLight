@@ -136,14 +136,11 @@ int main()
         case TRIGGERED:
             PORTB ^= _BV(RELAY_PIN); // Toggle Relay Pin
             currentState = DISABLED;
-            sysTime = timer.getTime();
             break;
 
         case DISABLED:
             _delay_ms(700);
             currentState = IDLE;
-            sysTime = timer.getTime();
-
             break;
         }
     }
