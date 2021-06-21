@@ -66,6 +66,8 @@ void triggerUltrasonic()
     _delay_us(10);
     // write pin low
     PORTB &= ~_BV(TRIGGER_PIN);
+    timer.start();
+
     triggered = true;
 }
 
@@ -91,6 +93,7 @@ ISR(INT0_vect)
     {
         ultraPulse = timer.getTime() - ultraTimer;
         pulseEnd = true;
+        timer.stop();
     }
 }
 
@@ -109,8 +112,6 @@ int main()
 
     // Setup and start timer
     timer.setup(F_CPU);
-    timer.start();
-    uint32_t sysTime = 0;
 
     setupUltrasonic();
 
