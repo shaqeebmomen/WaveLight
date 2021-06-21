@@ -1,9 +1,11 @@
-// TODO top comments
+
 /**
+ * Code to drive motion-sensing relay switch
  * 
- * 
- * 
- * 
+ * MCU: Attiny85
+ * Hardware: HCSR04
+ * Date: June 21, 2021
+ * Author: Shaqeeb Momen
  */
 
 #include <stdint.h>
