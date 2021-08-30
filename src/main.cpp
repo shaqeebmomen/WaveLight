@@ -6,6 +6,16 @@
  * Hardware: HCSR04
  * Date: June 21, 2021
  * Author: Shaqeeb Momen
+ * 
+ * Pinout:
+ * 1- NC
+ * 2- Push Button
+ * 3- 10k pot
+ * 4- GND
+ * 5- Relay Sig
+ * 6- HCSR04_TRIGGER
+ * 7- HCSR04_ECHO
+ * 8- VCC
  */
 
 #include <stdint.h>
@@ -14,10 +24,12 @@
 #include <AnalogConverter.h>
 #include <util/delay.h>
 #include <avr/wdt.h>
+#include <avr/cpufunc.h>
 
 #define RELAY_PIN PB0
 #define TRIGGER_PIN PB1
 #define ECHO_PIN PB2
+#define BTN_PIN PB3
 
 #define MILLIS_TO_MICROS(s) s * 1000UL
 
@@ -115,10 +127,17 @@ int main()
     // Setup and start timer
     timer.setup(F_CPU);
 
+    // Setup ultrasonic sensor
     setupUltrasonic();
 
     // Set relay pin as output
     DDRB |= _BV(RELAY_PIN);
+
+    // Set button pin as input
+    DDRB &= ~_BV(BTN_PIN);
+    PORTB |= _BV(BTN_PIN);
+
+    _NOP(); // No-op for sync
 
     while (1)
     {
@@ -127,8 +146,7 @@ int main()
         {
         case IDLE:
             _delay_ms(50);
-
-            if (readUltrasonic() < getThres())
+            if (bit_is_clear(PINB, BTN_PIN) || (readUltrasonic() < getThres()))
             {
                 currentState = TRIGGERED;
             }
